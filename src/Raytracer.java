@@ -9,13 +9,13 @@ import processing.core.PVector;
 public class Raytracer extends PApplet {
 	private static final long serialVersionUID = 1L;
 	private static final String FILE_PATH = "res/test.txt";
-	
+
 	private Camera camera;
 	private RTInterpreter interpreter;
-	
+
 	public void setup() {
 		noLoop();
-		
+
 		ArrayList<String> lines = null;
 		try {
 			FileParser parser = new FileParser( FILE_PATH );
@@ -35,7 +35,7 @@ public class Raytracer extends PApplet {
 		}
 		// No lines read from file exit app
 		else exit();
-		
+
 		int i = interpreter.cameraIndex;
 		// Camera position and look position
 		Vertex v = new Vertex( 0, 0, -10, 0, 0, 0 );
@@ -43,36 +43,29 @@ public class Raytracer extends PApplet {
 		println("Camera vertex: " + v);
 		camera = new Camera(v, this);
 	}
-	
+
 	public void draw() {
 		camera.active();
-		
+
 		// Before we deal with pixels
 		loadPixels();
-		
-		float dist = camera.pos.dist(camera.center);
-		float pdist = 2 * dist * tan( radians( 30 ) );
-		PVector p0 = camera.pos;
-		PVector p1 = PVector.sub( PVector.sub( PVector.add( p0, PVector.mult( camera.forward, dist ) ),
-				PVector.mult( camera.right, pdist / 2 ) ),
-				PVector.mult( camera.up, pdist / 2 ) );
-		
+
 		Primitive[] primitives = interpreter.getPrimitives();
-		
+
+		float dist = 0.5f / tan( radians( 60 / 2 ) );
+		PVector d = PVector.mult( camera.forward, dist );
 		// Loop through every pixel
 		float x, y;
 		int i;
 		for ( y = 0; y < height; y++ ) {
 			for ( x = 0; x < width; x++ ) {
-				i = (int) (y * width + x);
-				
-				PVector p = PVector.add( PVector.add( p1, 
-						PVector.mult( camera.right, pdist * ( x / width + 0.5f )  ) ),
-						PVector.mult( camera.up, pdist * ( y / height + 0.5f )  ) );
-				//println(p);
-				PVector v = PVector.div( PVector.sub(p, p0), PVector.sub(p, p0).mag() );
+				i = (int) ( y * width + x );
 
-				Ray r = new Ray(camera.pos.get(), v);
+				PVector v = PVector.add( PVector.add( d,
+								PVector.mult( camera.up, ( 0.5f - y / ( height - 1 ) ) ) ),
+								PVector.mult( camera.right, (0.5f -  x / ( width - 1 ) ) ) );
+				
+				Ray r = new Ray( camera.pos.get(), v );
 				for ( Primitive prim : primitives ) {
 					if ( prim.intersects( r ) )
 						pixels[i] = Color.WHITE.getRGB();
@@ -83,13 +76,13 @@ public class Raytracer extends PApplet {
 		}
 		// When we are finished dealing with pixels
 		updatePixels();
-		
+
 		/*
 		fill( 0, 255, 0 );
-		Primitive[] primitives = interpreter.getPrimitives();
+
 		for ( Primitive p : primitives ) {
 			p.draw();
 		}
-		*/
+		 */
 	}
 }
