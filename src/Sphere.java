@@ -47,6 +47,7 @@ public class Sphere extends Primitive {
 		if ( t1 < 0 )
 			return false;
 		
+		@SuppressWarnings("unused")
 		float dist;
 		if ( t0 < 0 )
 			dist = t1;

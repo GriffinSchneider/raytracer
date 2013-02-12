@@ -12,7 +12,6 @@ public class Raytracer extends PApplet {
 	
 	private Camera camera;
 	private RTInterpreter interpreter;
-	private ArrayList<Ray> rays;
 	
 	public void setup() {
 		noLoop();
