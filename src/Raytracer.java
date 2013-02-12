@@ -3,13 +3,16 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import processing.core.PApplet;
+import processing.core.PVector;
 
 
 public class Raytracer extends PApplet {
 	private static final long serialVersionUID = 1L;
 	private static final String FILE_PATH = "res/test.txt";
 	
+	private Camera camera;
 	private RTInterpreter interpreter;
+	private ArrayList<Ray> rays;
 	
 	public void setup() {
 		noLoop();
@@ -25,7 +28,7 @@ public class Raytracer extends PApplet {
 		if ( lines != null ) { 
 			interpreter = new RTInterpreter( lines, this );
 			if ( interpreter != null ) {
-				size( interpreter.width, interpreter.height, P3D );
+				size( interpreter.width, interpreter.height, OPENGL );
 				background( interpreter.background.getRGB() );
 			}
 			// No interpreter exit app
@@ -33,43 +36,61 @@ public class Raytracer extends PApplet {
 		}
 		// No lines read from file exit app
 		else exit();
-	}
-	
-	private void createCamera() {
-		float fov = radians(90);
-		float cameraZ = ( height / 2 ) / tan( fov / 2 );
-		float width = this.width;
-		float height = this.height;
 		
 		int i = interpreter.cameraIndex;
-		Vertex v = new Vertex(0, 0, -10, 0, 0, 0);
+		// Camera position and look position
+		Vertex v = new Vertex( 0, 0, -10, 0, 0, 0 );
 		if ( i >= 0 ) v = interpreter.getVertex( i );
-		
-		
-		camera( v.x, v.y, v.z, v.x - v.dx, v.y - v.dy, v.z - v.dz, 0, 1, 0);
-		perspective( fov, width / height, cameraZ / 10, cameraZ * 10 );
+		println("Camera vertex: " + v);
+		camera = new Camera(v, this);
 	}
 	
 	public void draw() {
-		createCamera();
+		camera.active();
 		
 		// Before we deal with pixels
-		loadPixels();  
+		loadPixels();
+		
+		float dist = camera.pos.dist(camera.center);
+		float pdist = 2 * dist * tan( radians( 30 ) );
+		PVector p0 = camera.pos;
+		PVector p1 = PVector.sub( PVector.sub( PVector.add( p0, PVector.mult( camera.forward, dist ) ),
+				PVector.mult( camera.right, pdist / 2 ) ),
+				PVector.mult( camera.up, pdist / 2 ) );
+		
+		Primitive[] primitives = interpreter.getPrimitives();
+		
 		// Loop through every pixel
-		interpreter.background = Color.RED;
-		for (int i = 0; i < pixels.length; i++) {
-		  pixels[i] = interpreter.background.getRGB();
+		float x, y;
+		int i;
+		for ( y = 0; y < height; y++ ) {
+			for ( x = 0; x < width; x++ ) {
+				i = (int) (y * width + x);
+				
+				PVector p = PVector.add( PVector.add( p1, 
+						PVector.mult( camera.right, pdist * ( x / width + 0.5f )  ) ),
+						PVector.mult( camera.up, pdist * ( y / height + 0.5f )  ) );
+				//println(p);
+				PVector v = PVector.div( PVector.sub(p, p0), PVector.sub(p, p0).mag() );
+
+				Ray r = new Ray(camera.pos.get(), v);
+				for ( Primitive prim : primitives ) {
+					if ( prim.intersects( r ) )
+						pixels[i] = Color.WHITE.getRGB();
+					else
+						pixels[i] = interpreter.background.getRGB();
+				}
+			}
 		}
 		// When we are finished dealing with pixels
 		updatePixels();
 		
-		fill(0, 255, 0);
+		/*
+		fill( 0, 255, 0 );
 		Primitive[] primitives = interpreter.getPrimitives();
-		
-		
-		
 		for ( Primitive p : primitives ) {
 			p.draw();
 		}
+		*/
 	}
 }

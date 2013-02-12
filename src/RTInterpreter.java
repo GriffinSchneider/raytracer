@@ -5,7 +5,7 @@ import processing.core.PApplet;
 
 public class RTInterpreter {
 	private ArrayList<Vertex> vertices;
-	private ArrayList<Integer> spheres;
+	private ArrayList<SphereRef> spheres;
 	
 	
 	public int width;
@@ -31,8 +31,9 @@ public class RTInterpreter {
 		
 		int j;
 		for ( j = 0; j < this.spheres.size(); j++ ) {
-			Vertex v = getVertex(this.spheres.get(j));
-			primitives[i++] = new Sphere(v, parent);
+			SphereRef sr = this.spheres.get( j );
+			Vertex v = getVertex( sr.vertexIndex );
+			primitives[i++] = new Sphere( v, sr.radius, parent );
 		}
 		
 		return primitives;
@@ -41,7 +42,7 @@ public class RTInterpreter {
 	public RTInterpreter( ArrayList<String> lines, PApplet parent_ ) {
 		this.parent = parent_;
 		this.vertices = new ArrayList<Vertex>();
-		this.spheres = new ArrayList<Integer>();
+		this.spheres = new ArrayList<SphereRef>();
 		this.width = 256;
 		this.height = 256;
 		this.background = Color.WHITE;
@@ -50,19 +51,27 @@ public class RTInterpreter {
 		for ( String line : lines ) {
 			String[] args = line.split( " " );
 			String first = args[0];
+			// Comment
 			if ( first.equals( "##" ) ) {
 				
 			}
+			// Size of scene
 			else if ( first.equals( "ir" ) ) {
 				this.width = Integer.parseInt( args[1] );
 				this.height = Integer.parseInt( args[2] );
 			}
-			else if ( first.equals( "cc" ) ) {
-				this.spheres.add( Integer.parseInt( args[1] ) );
-			}
+			// Sphere
 			else if ( first.equals( "ss" ) ) {
-				this.cameraIndex = Integer.parseInt( args[1] );
+				float radius = -1;
+				int index = Integer.parseInt( args[1] );
+				// Check if a radius was specified
+				if ( args.length == 3 )
+					radius = Float.parseFloat( args[2] );
+				this.spheres.add( new SphereRef(index, radius) );
 			}
+			// Camera
+			else if ( first.equals( "cc" ) )
+				this.cameraIndex = Integer.parseInt( args[1] );
 			// Parse vertex
 			else if ( first.equals( "vv" ) ) {
 				int x = Integer.parseInt( args[1] );
@@ -91,11 +100,22 @@ public class RTInterpreter {
 				Color color = new Color(r, g, b);
 				
 				// Set the background color
-				if (first.equals( "back" )) this.background = color;
+				if (first.equals( "back" )) 
+					this.background = color;
 			}
 			else {
 				System.out.println("Warning: Operation " + first + " is not supported.");
 			}
 		}
+	}
+}
+
+class SphereRef {
+	int vertexIndex;
+	float radius;
+	
+	public SphereRef(int i, float r) {
+		this.vertexIndex = i;
+		this.radius = r;
 	}
 }

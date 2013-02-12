@@ -4,11 +4,13 @@ import processing.core.PVector;
 public class Sphere extends Primitive {
 	
 	public float radius;
-	public Sphere( Vertex vertex_, PApplet parent_ ) {
+	public Sphere( Vertex vertex_, float radius_, PApplet parent_ ) {
 		super( vertex_, parent_ );
-		
-		radius = 50;//PApplet.norm( vertex.x, vertex.y, vertex.z );
-		PApplet.println(radius);
+		// If the radius is less than zero it was not set
+		if ( radius_ < 0 ) 
+			this.radius = PApplet.mag( vertex.dx, vertex.dy, vertex.dz );
+		else
+			this.radius = radius_;
 	}
 	
 	@Override
@@ -24,7 +26,7 @@ public class Sphere extends Primitive {
 		
 		float a = PVector.dot( r.d, r.d );
 		float b = 2 * PVector.dot( r.d, diff );
-		float c = PVector.dot( diff, diff ) - PApplet.sq( this.radius );
+		float c = PVector.dot( diff, diff ) - this.radius * this.radius;
 		
 		float d = b * b - 4 * a * c;
 		// d is negative so there is no root
@@ -50,8 +52,6 @@ public class Sphere extends Primitive {
 			dist = t1;
 		else
 			dist = t0;
-		
-		PApplet.println(dist);
 		
 		return true;
 	}
