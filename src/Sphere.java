@@ -14,7 +14,7 @@ public class Sphere extends Primitive {
 	}
 	
 	@Override
-	public void draw() {
+	public void debug() {
 		parent.noStroke();
 		parent.translate( this.pos.x, this.pos.y, this.pos.z );
 		parent.sphere( this.radius );

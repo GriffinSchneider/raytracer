@@ -7,9 +7,11 @@ public class Camera extends Node {
 	public PVector forward;
 	public PVector right;
 	public PVector up;
+	public float fov;
 	
 	public Camera( Vertex vertex_, PApplet parent_ ) {
 		super( vertex_, parent_ );
+		this.fov = PApplet.radians( 60 );
 		
 		this.center = PVector.add( this.pos, this.vertex.getD() );
 		
@@ -22,11 +24,9 @@ public class Camera extends Node {
 	}
 	
 	public void active() {
-		// Field of view of 60
-		float fov = PApplet.radians(60);
 		float width = parent.width;
 		float height = parent.height;
-		float cameraZ = ( height / 2 ) / PApplet.tan( fov / 2 );
+		float cameraZ = ( height / 2 ) / PApplet.tan( this.fov / 2 );
 		
 		parent.camera( this.pos.x, this.pos.y, this.pos.z,
 				this.center.x, this.center.y, this.center.z, 

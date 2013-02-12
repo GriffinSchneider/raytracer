@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
@@ -29,19 +28,13 @@ public class Raytracer extends PApplet {
 			if ( interpreter != null ) {
 				size( interpreter.width, interpreter.height, OPENGL );
 				background( interpreter.background.getRGB() );
+				camera = interpreter.camera;
 			}
 			// No interpreter exit app
 			else exit();
 		}
 		// No lines read from file exit app
 		else exit();
-
-		int i = interpreter.cameraIndex;
-		// Camera position and look position
-		Vertex v = new Vertex( 0, 0, -10, 0, 0, 0 );
-		if ( i >= 0 ) v = interpreter.getVertex( i );
-		println("Camera vertex: " + v);
-		camera = new Camera(v, this);
 	}
 
 	public void draw() {
@@ -50,9 +43,7 @@ public class Raytracer extends PApplet {
 		// Before we deal with pixels
 		loadPixels();
 
-		Primitive[] primitives = interpreter.getPrimitives();
-
-		float dist = 0.5f / tan( radians( 60 / 2 ) );
+		float dist = 0.5f / tan( camera.fov / 2 );
 		PVector d = PVector.mult( camera.forward, dist );
 		// Loop through every pixel
 		float x, y;
@@ -61,14 +52,14 @@ public class Raytracer extends PApplet {
 			for ( x = 0; x < width; x++ ) {
 				i = (int) ( y * width + x );
 
-				PVector v = PVector.add( PVector.add( d,
+				PVector dir = PVector.add( PVector.add( d,
 								PVector.mult( camera.up, ( 0.5f - y / ( height - 1 ) ) ) ),
-								PVector.mult( camera.right, (0.5f -  x / ( width - 1 ) ) ) );
+								PVector.mult( camera.right, ( 0.5f -  x / ( width - 1 ) ) ) );
 				
-				Ray r = new Ray( camera.pos.get(), v );
-				for ( Primitive prim : primitives ) {
-					if ( prim.intersects( r ) )
-						pixels[i] = Color.WHITE.getRGB();
+				Ray r = new Ray( camera.pos.get(), dir );
+				for ( Primitive p : interpreter.primitives ) {
+					if ( p.intersects( r ) )
+						pixels[i] = p.amb.getRGB();
 					else
 						pixels[i] = interpreter.background.getRGB();
 				}
@@ -81,7 +72,7 @@ public class Raytracer extends PApplet {
 		fill( 0, 255, 0 );
 
 		for ( Primitive p : primitives ) {
-			p.draw();
+			p.debug();
 		}
 		 */
 	}
