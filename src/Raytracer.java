@@ -12,6 +12,10 @@ public class Raytracer extends PApplet {
 	private Camera camera;
 	private RTInterpreter interpreter;
 
+    public static void main(String[] args) {
+        PApplet.main(new String[] { Raytracer.class.getName() });
+    }
+	
 	public void setup() {
 		noLoop();
 
