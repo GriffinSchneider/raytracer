@@ -42,7 +42,8 @@ public class RTInterpreter {
 				restOfLines.add(line);
 		}
 		
-		Color amb = new Color( 0.2f, 0.2f, 0.2f );
+		Color ambientMaterial = new Color( 0.2f, 0.2f, 0.2f );
+		Color ambientLight = new Color( 0.2f, 0.2f, 0.2f );
 		Color diff = new Color( 1, 1, 1 );
 		//Vector4f spec = new Vector4f( 1, 1, 1, 64 );
 		//Vector4f trans = new Vector4f( 0, 0, 0, 1 );
@@ -59,6 +60,13 @@ public class RTInterpreter {
 				this.width = Integer.parseInt( args[1] );
 				this.height = Integer.parseInt( args[2] );
 			}
+            // Ambient light
+            else if ( first.equals( "al" ) ) {
+                float r = Float.parseFloat( args[1] );
+				float g = Float.parseFloat( args[2] );
+				float b = Float.parseFloat( args[3] );
+				ambientLight = new Color(r, g, b);
+            }
 			// Sphere
 			else if ( first.equals( "ss" ) ) {
 				float radius = -1;
@@ -69,7 +77,8 @@ public class RTInterpreter {
 					radius = Float.parseFloat( args[2] );
 				
 				Sphere s = new Sphere( v, radius, parent );
-				s.amb = amb;
+				s.ambientMaterial = ambientMaterial;
+                s.ambientLight = ambientLight;
 				s.diff = diff;
 				this.primitives.add( s );
 			}
@@ -86,8 +95,7 @@ public class RTInterpreter {
 					|| first.equals( "dl" )
 					|| first.equals( "back" ) ) {
 				int index = 1;
-				if (first.equals( "pl" ) 
-						|| first.equals( "dl" )) {
+				if (first.equals( "pl" ) || first.equals( "dl" )) {
 					index++;
 				}
 				float r = Float.parseFloat( args[index++] );
@@ -95,14 +103,16 @@ public class RTInterpreter {
 				float b = Float.parseFloat( args[index++] );
 				Color color = new Color(r, g, b);
 				
-				if ( first.equals( "am" ) )
-					amb = color;
-			    if ( first.equals( "dm" ) )
+				if ( first.equals( "am" ) ) {
+					ambientMaterial = color;
+			    } if ( first.equals( "dm" ) ) {
 			    	diff = color;
+                }
 				
 				// Set the background color
-				if (first.equals( "back" )) 
+				if (first.equals( "back" ))  {
 					this.background = color;
+                }
 			}
 			else {
 				System.out.println("Warning: Operation " + first + " is not supported.");

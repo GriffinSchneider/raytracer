@@ -1,3 +1,5 @@
+import java.awt.Color;
+
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -12,6 +14,14 @@ public class Sphere extends Primitive {
 		else
 			this.radius = radius_;
 	}
+
+    @Override
+    public Color getColor(Ray r) {
+        Color ambientComponent = new Color(this.ambientLight.getRed()   * this.ambientMaterial.getRed()   / (255.0f * 255.0f),
+                                           this.ambientLight.getGreen() * this.ambientMaterial.getGreen() / (255.0f * 255.0f),
+                                           this.ambientLight.getBlue()  * this.ambientMaterial.getBlue()  / (255.0f * 255.0f));
+        return ambientComponent;
+    }
 	
 	@Override
 	public void debug() {

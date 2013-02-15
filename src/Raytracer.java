@@ -63,7 +63,7 @@ public class Raytracer extends PApplet {
 				Ray r = new Ray( camera.pos.get(), dir );
 				for ( Primitive p : interpreter.primitives ) {
 					if ( p.intersects( r ) )
-						pixels[i] = p.amb.getRGB();
+						pixels[i] = p.getColor(r).getRGB();
 					else
 						pixels[i] = interpreter.background.getRGB();
 				}

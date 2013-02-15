@@ -3,7 +3,8 @@ import java.awt.Color;
 import processing.core.PApplet;
 
 public abstract class Primitive extends Node {
-	public Color amb;
+    public Color ambientMaterial;
+	public Color ambientLight;
 	public Color diff;
 	
 	public Primitive(Vertex vertex_, PApplet parent_ ) {
@@ -11,6 +12,8 @@ public abstract class Primitive extends Node {
 	}
 	
 	public abstract boolean intersects( Ray r );
+
+    public abstract Color getColor(Ray r);
 	
 	public abstract void debug();
 }
