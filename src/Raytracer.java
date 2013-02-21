@@ -11,13 +11,16 @@ public class Raytracer extends PApplet {
 
 	private Camera camera;
 	private RTInterpreter interpreter;
+	
+	private int by, ty;
+	private int pixelValues[][];
 
     public static void main(String[] args) {
         PApplet.main(new String[] { Raytracer.class.getName() });
     }
 	
 	public void setup() {
-		noLoop();
+		//noLoop();
 
 		ArrayList<String> lines = null;
 		try {
@@ -40,49 +43,58 @@ public class Raytracer extends PApplet {
 		// No lines read from file exit app
 		else exit();
 	}
-
-	public void draw() {
-		camera.active();
-
-		// Before we deal with pixels
-		loadPixels();
-
+	
+	public void calculatePixelValues() {
+		pixelValues = new int[width][height];
+		
 		float dist = 0.5f / tan( camera.fov / 2 );
 		PVector d = PVector.mult( camera.forward, dist );
+		
 		// Loop through every pixel
-		float x, y;
-		int i;
-		for ( y = 0; y < height; y++ ) {
-			for ( x = 0; x < width; x++ ) {
-				i = (int) ( y * width + x );
-
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
 				PVector dir = PVector.add( PVector.add( d,
-								PVector.mult( camera.up, ( 0.5f - y / ( height - 1 ) ) ) ),
-								PVector.mult( camera.right, ( 0.5f -  x / ( width - 1 ) ) ) );
+								PVector.mult( camera.up, ( 0.5f - ((float) y) / ( height - 1 ) ) ) ),
+								PVector.mult( camera.right, ( 0.5f -  ((float) x) / ( width - 1 ) ) ) );
 				
 				Ray r = new Ray( camera.pos.get(), dir );
 				for (Primitive p : interpreter.primitives) {
 					PVector intersect = p.intersectionPoint(r);
 					if (intersect == null) {
-						pixels[i] = interpreter.background.getRGB();
+						pixelValues[x][y] = interpreter.background.getRGB();
 					} else {
-						pixels[i] = p.getColor(intersect, interpreter.lights).getRGB();
+						pixelValues[x][y] = p.getColor(intersect, interpreter.lights).getRGB();
 						break;
 					}
 				}
 			}
 		}
-		// When we are finished dealing with pixels
+	}
+	
+	public void draw() {
+		if (pixelValues == null) {
+			camera.active();
+			calculatePixelValues();
+			by = ty = height / 2;
+		}
+		
+		loadPixels();
+		for (int y = by; y < ty; y++) {
+			for (int x = 0; x < width; x++) {
+				int i = (int) ( y * width + x );
+				pixels[i] = pixelValues[x][y];
+			}
+		}
 		updatePixels();
 
-		save(interpreter.outputFileName);
-		
-		/*
-		fill( 0, 255, 0 );
-
-		for ( Primitive p : primitives ) {
-			p.deug();
+		by--;
+		ty++;
+		if (ty >= height) {
+			if (by < 0) {
+				noLoop(); 
+				save(interpreter.outputFileName);
+			}
+			ty = height - 1;
 		}
-		 */
 	}
 }
