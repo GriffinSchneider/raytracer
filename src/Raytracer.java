@@ -75,6 +75,8 @@ public class Raytracer extends PApplet {
 		// When we are finished dealing with pixels
 		updatePixels();
 
+		save(interpreter.outputFileName);
+		
 		/*
 		fill( 0, 255, 0 );
 

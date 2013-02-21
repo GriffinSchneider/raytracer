@@ -9,6 +9,7 @@ public class RTInterpreter {
 
 	public int width;
 	public int height;
+	public String outputFileName = "sample.tif";
 	public Color background;
 	public Camera camera;
 	
@@ -56,6 +57,10 @@ public class RTInterpreter {
 			// Comment
 			if ( first.equals( "##" ) ) {
 				
+			}
+			// Output File Name
+			else if ( first.equals( "out" ) || first.equals( "output" ) ) {
+				this.outputFileName = args[1];
 			}
 			// Size of scene
 			else if ( first.equals( "ir" ) ) {
