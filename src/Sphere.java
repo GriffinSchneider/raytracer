@@ -36,7 +36,7 @@ public class Sphere extends Primitive {
 			lightDir.normalize();
 			float dot = PVector.dot(normal, lightDir);
 			if (dot > 0) {
-				System.out.println("sfd");
+				//System.out.println("sfd");
 			diffuseR += light.getIntensity(intersectionPoint).getRed() * this.diffuseMaterial.getRed() * dot / (255.0f * 255.0f);
 			diffuseG += light.getIntensity(intersectionPoint).getGreen() * this.diffuseMaterial.getGreen() * dot / (255.0f * 255.0f);
 			diffuseB += light.getIntensity(intersectionPoint).getBlue() * this.diffuseMaterial.getBlue() * dot / (255.0f * 255.0f);
