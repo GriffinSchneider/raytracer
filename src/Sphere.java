@@ -18,11 +18,10 @@ public class Sphere extends Primitive {
 
 	@Override
 	public Color getColor(PVector intersectionPoint, ArrayList<Light> lights) {
-		Color ambientComponent = new Color(this.ambientLight.getRed()
-				* this.ambientMaterial.getRed() / (255.0f * 255.0f),
-				this.ambientLight.getGreen() * this.ambientMaterial.getGreen()
-						/ (255.0f * 255.0f), this.ambientLight.getBlue()
-						* this.ambientMaterial.getBlue() / (255.0f * 255.0f));
+		Color ambientComponent = new Color(
+				this.ambientLight.getRed() * this.ambientMaterial.getRed() / (255.0f*255.0f),		
+				this.ambientLight.getGreen() * this.ambientMaterial.getGreen() / (255.0f*255.0f), 
+				this.ambientLight.getBlue()	* this.ambientMaterial.getBlue() / (255.0f*255.0f));
 
 		PVector normal = PVector.sub(intersectionPoint, this.pos);
 		normal.normalize();
@@ -45,7 +44,8 @@ public class Sphere extends Primitive {
 		}
 		Color diffuseComponent = new Color(diffuseR, diffuseG, diffuseB);
 		
-		return new Color(ambientComponent.getRed() + diffuseComponent.getRed(),
+		return new Color(
+				ambientComponent.getRed() + diffuseComponent.getRed(),
 				ambientComponent.getGreen() + diffuseComponent.getGreen(),
 				ambientComponent.getBlue() + diffuseComponent.getBlue());
 	}
