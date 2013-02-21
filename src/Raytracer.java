@@ -66,7 +66,7 @@ public class Raytracer extends PApplet {
 					if (intersect == null) {
 						pixels[i] = interpreter.background.getRGB();
 					} else {
-						pixels[i] = p.getColor(intersect, interpreter.lights).getRGB();
+						pixels[i] = p.getColor(intersect, camera.pos, interpreter.lights).getRGB();
 						break;
 					}
 				}

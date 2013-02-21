@@ -8,6 +8,8 @@ public abstract class Primitive extends Node {
     public Color ambientMaterial;
 	public Color ambientLight;
 	public Color diffuseMaterial;
+	public Color specularMaterial;
+	public float specularShininess;
 	
 	public Primitive(Vertex vertex_, PApplet parent_ ) {
 		super( vertex_, parent_ );
@@ -15,7 +17,7 @@ public abstract class Primitive extends Node {
 	
 	public abstract PVector intersectionPoint(Ray r);
 
-    public abstract Color getColor(PVector intersectionPoint, ArrayList<Light> lights);
+    public abstract Color getColor(PVector intersectionPoint, PVector viewPoint, ArrayList<Light> lights);
 	
 	public abstract void debug();
 }

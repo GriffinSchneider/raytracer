@@ -46,9 +46,9 @@ public class RTInterpreter {
 		
 		Color ambientMaterial = new Color( 0.2f, 0.2f, 0.2f );
 		Color ambientLight = new Color( 0.2f, 0.2f, 0.2f );
-		Color diffuseMaterial = new Color( 1, 1, 1 );
-		//Vector4f spec = new Vector4f( 1, 1, 1, 64 );
-		//Vector4f trans = new Vector4f( 0, 0, 0, 1 );
+		Color diffuseMaterial = new Color( 1f, 1f, 1f );
+		Color specularMaterial = new Color( 1f, 1f, 1f );
+		float specularShininess = 64;
 		
 		for ( String line : restOfLines ) {
 			String[] args = line.split( " " );
@@ -100,6 +100,8 @@ public class RTInterpreter {
 				s.ambientMaterial = ambientMaterial;
                 s.ambientLight = ambientLight;
 				s.diffuseMaterial = diffuseMaterial;
+				s.specularMaterial = specularMaterial;
+				s.specularShininess = specularShininess;
 				this.primitives.add( s );
 			}
 			// Camera
@@ -127,6 +129,9 @@ public class RTInterpreter {
 					ambientMaterial = color;
 			    } if ( first.equals( "dm" ) ) {
 			    	diffuseMaterial = color;
+                } if ( first.equals( "sm" )) {
+                	specularMaterial = color;
+                	specularShininess = Float.parseFloat( args[index++] );
                 }
 				
 				// Set the background color
