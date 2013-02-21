@@ -9,21 +9,22 @@ vv 0 0 10 0 0 -1
 cc 0
 
 ## Ambient light
-al 1 1 1
+al 0.3 0.3 0.3
 
 ## Ambient material
-am 1 0 0
+am 0 0 1
 ## Diffuse material
 dm 0 1 0
-## Specular material
-sm 1 1 1 16
-## Transmissive material
-ts 0 1 3
 
 ## Sphere
 vv 0 0 -100 0 50 0
 ss 1
 
 ## Directional light
-vv 0 0 -200 0 0 1
-dl 2 1 1 1
+vv 100 100 0 0 1 1
+dl 2 0.4 0.4 0.4
+
+## Point light
+vv 0 0 0 0 0 1
+pl 3 1 1 1
+
