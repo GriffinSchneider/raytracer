@@ -32,12 +32,12 @@ public class RTInterpreter {
 			String first = args[0];
 			
 			if ( first.equals( "vv" ) ) {
-				int x = Integer.parseInt( args[1] );
-				int y = Integer.parseInt( args[2] );
-				int z = Integer.parseInt( args[3] );
-				int dx = Integer.parseInt( args[4] );
-				int dy = Integer.parseInt( args[5] );
-				int dz = Integer.parseInt( args[6] );
+				float x = Float.parseFloat( args[1] );
+				float y = Float.parseFloat( args[2] );
+				float z = Float.parseFloat( args[3] );
+				float dx = Float.parseFloat( args[4] );
+				float dy = Float.parseFloat( args[5] );
+				float dz = Float.parseFloat( args[6] );
 			    vertices.add( new Vertex( x, y, z, dx, dy, dz ) );
 			}
 			else
