@@ -12,7 +12,7 @@ cc 0
 al 1 1 1
 
 ## Ambient material
-am 1 0 0
+am 0 1 0
 ## Diffuse material
 dm 0 1 0
 ## Specular material
@@ -25,5 +25,21 @@ vv 0 0 -100 0 50 0
 ss 1
 
 ## Directional light
-vv 0 0 -200 0 0 1
-dl 2 1 1 1
+vv 0 0 -50 0 0 1
+pl 2 1 1 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

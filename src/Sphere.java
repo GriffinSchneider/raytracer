@@ -31,23 +31,22 @@ public class Sphere extends Primitive {
 		float diffuseG = 0f;
 		float diffuseB = 0f;
 		for (Light light : lights) {
-			// TODO: only valid for directional lights.
-			PVector lightDir = new PVector(light.vertex.dx, light.vertex.dy,
-					light.vertex.dz);
+			// Dot product of light direction and normal
+			PVector lightDir = light.getDirection(intersectionPoint);
 			lightDir.normalize();
-		
 			float dot = normal.dot(lightDir);
 		
-			diffuseR += light.getIntensity(this.pos).getRed() * this.diffuseMaterial.getRed() * dot / (255.0f * 255.0f);
-			diffuseG += light.getIntensity(this.pos).getGreen() * this.diffuseMaterial.getGreen() * dot / (255.0f * 255.0f);
-			diffuseB += light.getIntensity(this.pos).getBlue() * this.diffuseMaterial.getBlue() * dot / (255.0f * 255.0f);
+			diffuseR += light.getIntensity(intersectionPoint).getRed() * this.diffuseMaterial.getRed() * dot / (255.0f * 255.0f);
+			diffuseG += light.getIntensity(intersectionPoint).getGreen() * this.diffuseMaterial.getGreen() * dot / (255.0f * 255.0f);
+			diffuseB += light.getIntensity(intersectionPoint).getBlue() * this.diffuseMaterial.getBlue() * dot / (255.0f * 255.0f);
 		}
 		Color diffuseComponent = new Color(diffuseR, diffuseG, diffuseB);
-		
-		return new Color(
-				ambientComponent.getRed() + diffuseComponent.getRed(),
-				ambientComponent.getGreen() + diffuseComponent.getGreen(),
-				ambientComponent.getBlue() + diffuseComponent.getBlue());
+		System.out.println(diffuseComponent);
+		return diffuseComponent;
+//		return new Color(
+//				ambientComponent.getRed() + diffuseComponent.getRed(),
+//				ambientComponent.getGreen() + diffuseComponent.getGreen(),
+//				ambientComponent.getBlue() + diffuseComponent.getBlue());
 	}
 		
 	@Override
@@ -87,7 +86,6 @@ public class Sphere extends Primitive {
 			throw new IllegalArgumentException("No intersection point.");
 		}
 
-		@SuppressWarnings("unused")
 		float dist;
 		if ( t0 < 0 )
 			dist = t1;
@@ -97,7 +95,7 @@ public class Sphere extends Primitive {
 		float xPoint = r.o.x + dist * (r.d.x);
 		float yPoint = r.o.y + dist * (r.d.y);
 		float zPoint = r.o.z + dist * (r.d.z);
-
+		
 		return new PVector(xPoint, yPoint, zPoint);
 	}
 }
