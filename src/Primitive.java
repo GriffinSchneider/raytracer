@@ -13,7 +13,7 @@ public abstract class Primitive extends Node {
 		super( vertex_, parent_ );
 	}
 	
-	public abstract PVector intersectionPoint(Ray r) throws IllegalArgumentException;
+	public abstract PVector intersectionPoint(Ray r);
 
     public abstract Color getColor(PVector intersectionPoint, ArrayList<Light> lights);
 	

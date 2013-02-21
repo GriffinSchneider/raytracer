@@ -61,13 +61,14 @@ public class Raytracer extends PApplet {
 								PVector.mult( camera.right, ( 0.5f -  x / ( width - 1 ) ) ) );
 				
 				Ray r = new Ray( camera.pos.get(), dir );
-				for ( Primitive p : interpreter.primitives ) {
-					try {
-						PVector intersect = p.intersectionPoint(r);
-						pixels[i] = p.getColor(intersect, interpreter.lights).getRGB();
-					} catch (IllegalArgumentException e) {
+				for (Primitive p : interpreter.primitives) {
+					PVector intersect = p.intersectionPoint(r);
+					if (intersect == null) {
 						pixels[i] = interpreter.background.getRGB();
-					}	
+					} else {
+						pixels[i] = p.getColor(intersect, interpreter.lights).getRGB();
+						break;
+					}
 				}
 			}
 		}
@@ -78,7 +79,7 @@ public class Raytracer extends PApplet {
 		fill( 0, 255, 0 );
 
 		for ( Primitive p : primitives ) {
-			p.debug();
+			p.deug();
 		}
 		 */
 	}

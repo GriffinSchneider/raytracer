@@ -31,23 +31,26 @@ public class Sphere extends Primitive {
 		float diffuseG = 0f;
 		float diffuseB = 0f;
 		for (Light light : lights) {
-			// TODO: only valid for directional lights.
-			PVector lightDir = new PVector(light.vertex.dx, light.vertex.dy,
-					light.vertex.dz);
+			// Dot product of light direction and normal
+			PVector lightDir = light.getDirection(intersectionPoint);
 			lightDir.normalize();
-		
-			float dot = normal.dot(lightDir);
-		
-			diffuseR += light.getIntensity(this.pos).getRed() * this.diffuseMaterial.getRed() * dot / (255.0f * 255.0f);
-			diffuseG += light.getIntensity(this.pos).getGreen() * this.diffuseMaterial.getGreen() * dot / (255.0f * 255.0f);
-			diffuseB += light.getIntensity(this.pos).getBlue() * this.diffuseMaterial.getBlue() * dot / (255.0f * 255.0f);
+			float dot = PVector.dot(normal, lightDir);
+			if (dot > 0) {
+				System.out.println("sfd");
+			diffuseR += light.getIntensity(intersectionPoint).getRed() * this.diffuseMaterial.getRed() * dot / (255.0f * 255.0f);
+			diffuseG += light.getIntensity(intersectionPoint).getGreen() * this.diffuseMaterial.getGreen() * dot / (255.0f * 255.0f);
+			diffuseB += light.getIntensity(intersectionPoint).getBlue() * this.diffuseMaterial.getBlue() * dot / (255.0f * 255.0f);
+			}
 		}
-		Color diffuseComponent = new Color(diffuseR, diffuseG, diffuseB);
-		
-		return new Color(
-				ambientComponent.getRed() + diffuseComponent.getRed(),
-				ambientComponent.getGreen() + diffuseComponent.getGreen(),
-				ambientComponent.getBlue() + diffuseComponent.getBlue());
+		Color diffuseComponent = new Color(
+				Math.max(Math.min(diffuseR,1.0f), 0), 
+				Math.max(Math.min(diffuseG,1.0f), 0), 
+				Math.max(Math.min(diffuseB,1.0f), 0));		
+		Color ret = new Color(
+				Math.min(ambientComponent.getRed() + diffuseComponent.getRed(), 255),
+				Math.min(ambientComponent.getGreen() + diffuseComponent.getGreen(), 255),
+				Math.min(ambientComponent.getBlue() + diffuseComponent.getBlue(), 255));
+		return ret;
 	}
 		
 	@Override
@@ -69,7 +72,7 @@ public class Sphere extends Primitive {
 		float d = b * b - 4 * a * c;
 		// d is negative so there is no root
 		if (d < 0) {
-			throw new IllegalArgumentException("No intersection point.");
+			return null;
 		}
 		
 		float dSqrt = PApplet.sqrt(d);
@@ -84,10 +87,9 @@ public class Sphere extends Primitive {
 
 		// If t1 is less than zero the ray misses the sphere
 		if (t1 < 0) {
-			throw new IllegalArgumentException("No intersection point.");
+			return null;
 		}
 
-		@SuppressWarnings("unused")
 		float dist;
 		if ( t0 < 0 )
 			dist = t1;
@@ -97,7 +99,7 @@ public class Sphere extends Primitive {
 		float xPoint = r.o.x + dist * (r.d.x);
 		float yPoint = r.o.y + dist * (r.d.y);
 		float zPoint = r.o.z + dist * (r.d.z);
-
+		
 		return new PVector(xPoint, yPoint, zPoint);
 	}
 }

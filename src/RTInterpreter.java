@@ -78,6 +78,15 @@ public class RTInterpreter {
 				Color color = new Color(r, g, b);
                 this.lights.add(new DirectionalLight(vertices.get(index), color, parent));
             }
+            // Point light
+            else if ( first.equals( "pl") ) {
+                int index = Integer.parseInt( args[1] );
+                float r = Float.parseFloat( args[2] );
+				float g = Float.parseFloat( args[3] );
+				float b = Float.parseFloat( args[4] );
+				Color color = new Color(r, g, b);
+                this.lights.add(new PointLight(vertices.get(index), color, parent));
+            }
 			// Sphere
 			else if ( first.equals( "ss" ) ) {
 				float radius = -1;
@@ -126,7 +135,9 @@ public class RTInterpreter {
                 }
 			}
 			else {
-				System.out.println("Warning: Operation " + first + " is not supported.");
+				if (!first.equals("")) {
+					System.out.println("Warning: Operation " + first + " is not supported.");
+				}
 			}
 		}
 		
