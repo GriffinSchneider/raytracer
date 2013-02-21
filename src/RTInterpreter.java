@@ -5,6 +5,7 @@ import processing.core.PApplet;
 
 public class RTInterpreter {
 	public ArrayList<Primitive> primitives;
+    public ArrayList<Light> lights;
 
 	public int width;
 	public int height;
@@ -16,6 +17,7 @@ public class RTInterpreter {
 	public RTInterpreter( ArrayList<String> lines, PApplet parent_ ) {
 		this.parent = parent_;
 		this.primitives = new ArrayList<Primitive>();
+		this.lights = new ArrayList<Light>();
 		this.width = 256;
 		this.height = 256;
 		this.background = Color.WHITE;
@@ -44,7 +46,7 @@ public class RTInterpreter {
 		
 		Color ambientMaterial = new Color( 0.2f, 0.2f, 0.2f );
 		Color ambientLight = new Color( 0.2f, 0.2f, 0.2f );
-		Color diff = new Color( 1, 1, 1 );
+		Color diffuseMaterial = new Color( 1, 1, 1 );
 		//Vector4f spec = new Vector4f( 1, 1, 1, 64 );
 		//Vector4f trans = new Vector4f( 0, 0, 0, 1 );
 		
@@ -67,6 +69,15 @@ public class RTInterpreter {
 				float b = Float.parseFloat( args[3] );
 				ambientLight = new Color(r, g, b);
             }
+            // Directional light
+            else if ( first.equals( "dl") ) {
+                int index = Integer.parseInt( args[1] );
+                float r = Float.parseFloat( args[2] );
+				float g = Float.parseFloat( args[3] );
+				float b = Float.parseFloat( args[4] );
+				Color color = new Color(r, g, b);
+                this.lights.add(new DirectionalLight(vertices.get(index), color, parent));
+            }
 			// Sphere
 			else if ( first.equals( "ss" ) ) {
 				float radius = -1;
@@ -79,7 +90,7 @@ public class RTInterpreter {
 				Sphere s = new Sphere( v, radius, parent );
 				s.ambientMaterial = ambientMaterial;
                 s.ambientLight = ambientLight;
-				s.diff = diff;
+				s.diffuseMaterial = diffuseMaterial;
 				this.primitives.add( s );
 			}
 			// Camera
@@ -106,7 +117,7 @@ public class RTInterpreter {
 				if ( first.equals( "am" ) ) {
 					ambientMaterial = color;
 			    } if ( first.equals( "dm" ) ) {
-			    	diff = color;
+			    	diffuseMaterial = color;
                 }
 				
 				// Set the background color
