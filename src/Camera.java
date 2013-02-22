@@ -21,6 +21,10 @@ public class Camera extends Node {
 		this.up = new PVector( 0, 1, 0 );
 		
 		this.right = this.up.cross(this.forward);
+		this.right.normalize();
+		
+		this.up = forward.cross(this.right);
+		this.up.normalize();
 	}
 	
 	public void active() {

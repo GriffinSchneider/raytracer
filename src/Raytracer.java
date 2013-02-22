@@ -53,9 +53,9 @@ public class Raytracer extends PApplet {
 		// Loop through every pixel
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				PVector dir = PVector.add( PVector.add( d,
-								PVector.mult( camera.up, ( 0.5f - ((float) y) / ( height - 1 ) ) ) ),
-								PVector.mult( camera.right, ( 0.5f -  ((float) x) / ( width - 1 ) ) ) );
+				PVector p1 = PVector.add( d, PVector.mult( camera.up, ( 0.5f - ((float) y) / ( height - 1 ) ) ) );
+				PVector two = PVector.mult( camera.right, ( 0.5f -  ((float) x) / ( width - 1 ) ) );
+				PVector dir = PVector.add( p1,two);
 				
 				Ray r = new Ray( camera.pos.get(), dir );
 				
