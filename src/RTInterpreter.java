@@ -109,6 +109,18 @@ public class RTInterpreter {
 				s.specularShininess = specularShininess;
 				this.primitives.add( s );
 			}
+			// Plane
+			else if ( first.equals( "ps" ) ) {
+				int index = Integer.parseInt( args[1] );
+				Vertex v = vertices.get( index );
+				Plane s = new Plane( v, parent );
+				s.ambientMaterial = ambientMaterial;
+                s.ambientLight = ambientLight;
+				s.diffuseMaterial = diffuseMaterial;
+				s.specularMaterial = specularMaterial;
+				s.specularShininess = specularShininess;
+				this.primitives.add( s );
+			}
 			// Camera
 			else if ( first.equals( "cc" ) ) {
 				int index = Integer.parseInt( args[1] );
