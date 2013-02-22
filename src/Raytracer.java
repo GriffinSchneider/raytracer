@@ -58,18 +58,27 @@ public class Raytracer extends PApplet {
 								PVector.mult( camera.right, ( 0.5f -  ((float) x) / ( width - 1 ) ) ) );
 				
 				Ray r = new Ray( camera.pos.get(), dir );
+				
+				// Find the closest intersection point
+				Primitive closestPrimitive = null;
+				Float closestT = null;
 				for (Primitive p : interpreter.primitives) {
 					Float t = p.tIntersect(r);
-					if (t == null) {
-						pixelValues[x][y] = interpreter.background.getRGB();
-					} else {
-						PVector intersect = new PVector(
-								 r.o.x + t * r.d.x,
-								 r.o.y + t * r.d.y,
-								 r.o.z + t * r.d.z);
-						pixelValues[x][y] = p.getColor(intersect, camera.pos, interpreter.lights).getRGB();
-						break;
+					if (t != null && (closestT == null || t < closestT)) {
+						closestT = t;
+						closestPrimitive = p;
 					}
+				}
+				
+				// Get the color from the closest intersection point
+				if (closestT == null) {
+					pixelValues[x][y] = interpreter.background.getRGB();
+				} else {
+					PVector intersect = new PVector(
+							 r.o.x + closestT * r.d.x,
+							 r.o.y + closestT * r.d.y,
+							 r.o.z + closestT * r.d.z);
+					pixelValues[x][y] = closestPrimitive.getColor(intersect, camera.pos, interpreter.lights).getRGB();
 				}
 			}
 		}
