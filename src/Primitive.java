@@ -15,7 +15,7 @@ public abstract class Primitive extends Node {
 		super( vertex_, parent_ );
 	}
 	
-	public abstract PVector intersectionPoint(Ray r);
+	public abstract Float tIntersect(Ray r);
 
     public abstract Color getColor(PVector intersectionPoint, PVector viewPoint, ArrayList<Light> lights);
 	

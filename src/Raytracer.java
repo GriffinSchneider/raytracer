@@ -59,10 +59,14 @@ public class Raytracer extends PApplet {
 				
 				Ray r = new Ray( camera.pos.get(), dir );
 				for (Primitive p : interpreter.primitives) {
-					PVector intersect = p.intersectionPoint(r);
-					if (intersect == null) {
+					Float t = p.tIntersect(r);
+					if (t == null) {
 						pixelValues[x][y] = interpreter.background.getRGB();
 					} else {
+						PVector intersect = new PVector(
+								 r.o.x + t * r.d.x,
+								 r.o.y + t * r.d.y,
+								 r.o.z + t * r.d.z);
 						pixelValues[x][y] = p.getColor(intersect, camera.pos, interpreter.lights).getRGB();
 						break;
 					}

@@ -86,7 +86,7 @@ public class Sphere extends Primitive {
 	}
 		
 	@Override
-	public PVector intersectionPoint(Ray r) throws IllegalArgumentException {
+	public Float tIntersect(Ray r) {
 		// Transform the ray into object space
 		Ray transformedRay = new Ray(PVector.sub(r.o, this.pos), r.d);
 		
@@ -120,11 +120,7 @@ public class Sphere extends Primitive {
 			dist = t1;
 		else
 			dist = t0;
-
-		float xPoint = r.o.x + dist * (r.d.x);
-		float yPoint = r.o.y + dist * (r.d.y);
-		float zPoint = r.o.z + dist * (r.d.z);
 		
-		return new PVector(xPoint, yPoint, zPoint);
+		return new Float(dist);
 	}
 }
