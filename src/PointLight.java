@@ -14,7 +14,7 @@ public class PointLight extends Light {
 	public Color getIntensity(PVector point) {
 		// Use c=0.001 for the attenuation coefficient, since c=1 makes point lights
 		// extremely dim.
-		float distanceSquared = (float) Math.pow(point.dist(this.pos), 2) * 0.001f;
+		float distanceSquared = PApplet.pow(point.dist(this.pos), 2) * 0.001f;
 		
 		float r = this.color.getRed() / 255.0f;
 		float g = this.color.getGreen() / 255.0f;

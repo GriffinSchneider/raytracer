@@ -7,22 +7,22 @@ import processing.core.PVector;
 public class Sphere extends Primitive {
 	
 	public float radius;
-	public Sphere( Vertex vertex_, float radius_, PApplet parent_ ) {
+	public Sphere( Vertex vertex_, Float radius_, PApplet parent_ ) {
 		super( vertex_, parent_ );
 		// If the radius is less than zero it was not set
-		if ( radius_ < 0 ) 
+		if ( radius_ == null ) 
 			this.radius = PApplet.mag( vertex.dx, vertex.dy, vertex.dz );
 		else
 			this.radius = radius_;
 	}
 
 	@Override
-	public Color getColor(PVector intersectionPoint, PVector viewPoint, ArrayList<Light> lights) {
+	public Color getColor(PVector intersectionPoint, PVector viewPoint, ArrayList<Light> lights, ArrayList<Primitive> primitives) {
 		// Get surface normal
-		PVector normal = PVector.sub(intersectionPoint, this.pos);
+		PVector normal = PVector.sub( intersectionPoint, this.pos );
 		normal.normalize();
 		
-		return this.getColor(intersectionPoint, viewPoint, normal, lights);		
+		return this.getColor( intersectionPoint, viewPoint, normal, lights, primitives );		
 	}
 		
 	@Override
@@ -35,11 +35,11 @@ public class Sphere extends Primitive {
 	@Override
 	public Float tIntersect(Ray r) {
 		// Transform the ray into object space
-		Ray transformedRay = new Ray(PVector.sub(r.o, this.pos), r.d);
+		Ray transformedRay = new Ray( PVector.sub( r.o, this.pos ), r.d );
 		
-		float a = PVector.dot(transformedRay.d, transformedRay.d);
-		float b = 2 * PVector.dot(transformedRay.d, transformedRay.o);
-		float c = PVector.dot(transformedRay.o, transformedRay.o) - this.radius*this.radius;
+		float a = PVector.dot( transformedRay.d, transformedRay.d );
+		float b = 2 * PVector.dot( transformedRay.d, transformedRay.o );
+		float c = PVector.dot( transformedRay.o, transformedRay.o ) - this.radius * this.radius;
 		
 		float d = b * b - 4 * a * c;
 		// d is negative so there is no root
@@ -47,15 +47,15 @@ public class Sphere extends Primitive {
 			return null;
 		}
 		
-		float dSqrt = PApplet.sqrt(d);
+		float dSqrt = PApplet.sqrt( d );
 		float s;
 		if ( b < 0 )
-			s = ( -b - dSqrt ) / 2;
+			s = ( -b - dSqrt ) / 2f;
 		else
-			s = ( -b + dSqrt ) / 2;
+			s = ( -b + dSqrt ) / 2f;
 		
-		float t0 = Math.min(s / a, c / s);
-		float t1 = Math.max(s / a, c / s);
+		float t0 = Math.min( s / a, c / s );
+		float t1 = Math.max( s / a, c / s );
 
 		// If t1 is less than zero the ray misses the sphere
 		if (t1 < 0) {
@@ -68,6 +68,6 @@ public class Sphere extends Primitive {
 		else
 			dist = t0;
 		
-		return new Float(dist);
+		return new Float( dist );
 	}
 }

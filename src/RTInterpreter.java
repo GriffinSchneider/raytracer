@@ -94,7 +94,7 @@ public class RTInterpreter {
             }
 			// Sphere
 			else if ( first.equals( "ss" ) ) {
-				float radius = -1;
+				Float radius = null;
 				int index = Integer.parseInt( args[1] );
 				Vertex v = vertices.get( index );
 				// Check if a radius was specified

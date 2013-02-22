@@ -13,7 +13,7 @@ public class Camera extends Node {
 		super( vertex_, parent_ );
 		this.fov = PApplet.radians( 60 );
 		
-		this.center = PVector.add( this.pos, this.vertex.getD() );
+		this.center = PVector.add( this.pos, this.vertex.getDirection() );
 		
 		this.forward = PVector.sub( this.center, this.pos );
 		this.forward.normalize();

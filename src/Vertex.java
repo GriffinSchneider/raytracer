@@ -12,7 +12,7 @@ public class Vertex {
 		this.dz = dz_;
 	}
 	
-	public PVector getD() {
+	public PVector getDirection() {
 		return new PVector( this.dx, this.dy, this.dz );
 	}
 	
