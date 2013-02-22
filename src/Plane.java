@@ -32,7 +32,17 @@ public class Plane extends Primitive {
 
 	@Override
 	public Color getColor(PVector intersectionPoint, PVector viewPoint,	ArrayList<Light> lights) {
-		return this.getColor(intersectionPoint, viewPoint, this.normal, lights);
+		// Inefficient hack: re-calculate this dot product to determine if we need to 
+		// reverse the normal (because the ray from the camera is intersecting the
+		// "back" of the plane).
+		float dot = this.normal.dot(PVector.sub(intersectionPoint, viewPoint));
+		
+		if (dot > 0) {
+			return this.getColor(intersectionPoint, viewPoint, PVector.mult(this.normal, -1), lights);
+		} else {
+			return this.getColor(intersectionPoint, viewPoint, this.normal, lights);
+		}
+		
 	}
 
 	@Override
