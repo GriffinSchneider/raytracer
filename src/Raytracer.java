@@ -85,6 +85,8 @@ public class Raytracer extends PApplet {
 	}
 	
 	public void draw() {
+		background(interpreter.background.getRGB());
+		
 		if (pixelValues == null) {
 			camera.active();
 			calculatePixelValues();
