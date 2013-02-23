@@ -1,5 +1,9 @@
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+
+import javax.swing.JFileChooser;
+import javax.swing.UIManager;
 
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -14,19 +18,40 @@ public class Raytracer extends PApplet {
 	
 	private int by, ty;
 	private int pixelValues[][];
-
-    public static void main(String[] args) {
-        PApplet.main(new String[] { Raytracer.class.getName() });
-    }
+	
+	private static String filePath = null;
+	
+	public static void main(String args[]) {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			e.printStackTrace();  
+		}
+		
+		JFileChooser fc;
+		fc = new JFileChooser("./");
+		
+		// in response to a button click: 
+        int returnVal = fc.showOpenDialog(null); 
+ 
+        if (returnVal == JFileChooser.APPROVE_OPTION) { 
+            File file = fc.getSelectedFile(); 
+            filePath = file.getAbsolutePath();
+        }
+        
+        if (filePath == null) {
+        	filePath = FILE_PATH;
+        }
+	    PApplet.main(new String[] { "Raytracer" });
+	}
 	
 	public void setup() {
 		ArrayList<String> lines = null;
 		try {
-			FileParser parser = new FileParser( FILE_PATH );
+			FileParser parser = new FileParser( filePath );
 			lines = parser.returnLines();
 		} catch ( FileNotFoundException e ) {
 			e.printStackTrace();
-			exit();
 		}
 		if ( lines != null ) { 
 			interpreter = new RTInterpreter( lines, this );
@@ -35,14 +60,10 @@ public class Raytracer extends PApplet {
 				background( interpreter.background.getRGB() );
 				camera = interpreter.camera;
 			}
-			// No interpreter exit app
-			else exit();
 		}
-		// No lines read from file exit app
-		else exit();
 	}
 	
-	public void calculatePixelValues() {
+	private void calculatePixelValues() {
 		pixelValues = new int[width][height];
 		
 		float dist = 0.5f / tan( camera.fov / 2 );
