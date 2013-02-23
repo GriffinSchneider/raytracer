@@ -1,0 +1,34 @@
+## sample input file
+output sample
+ir 512 512
+rdepth 2
+back 0 0 0
+
+## Camera
+vv 0 0 10 0 0 -1
+cc 0
+
+## Ambient light
+al 0.3 0.3 0.3
+
+## Ambient material
+am 0 0 1
+## Diffuse material
+dm 0 1 0
+
+## Sphere
+vv 0 0 -100 0 50 0
+ss 1
+
+## Directional light
+vv 100 100 0 0 1 1
+dl 2 0.4 0.4 0.4
+
+## Point light
+vv 0 0 0 0 0 1
+pl 3 1 1 1
+
+## Plane
+vv 0 0 -55 0 0 -1
+ps 4
+

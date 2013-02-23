@@ -20,8 +20,6 @@ public class Raytracer extends PApplet {
     }
 	
 	public void setup() {
-		//noLoop();
-
 		ArrayList<String> lines = null;
 		try {
 			FileParser parser = new FileParser( FILE_PATH );
