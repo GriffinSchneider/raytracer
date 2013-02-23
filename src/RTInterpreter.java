@@ -75,7 +75,7 @@ public class RTInterpreter {
 				ambientLight = new Color(r, g, b);
             }
             // Directional light
-            else if ( first.equals( "dl") ) {
+            else if ( first.equals( "dl" ) ) {
                 int index = Integer.parseInt( args[1] );
                 float r = Float.parseFloat( args[2] );
 				float g = Float.parseFloat( args[3] );
@@ -84,13 +84,22 @@ public class RTInterpreter {
                 this.lights.add(new DirectionalLight(vertices.get(index), color, parent));
             }
             // Point light
-            else if ( first.equals( "pl") ) {
+            else if ( first.equals( "pl" ) ) {
                 int index = Integer.parseInt( args[1] );
                 float r = Float.parseFloat( args[2] );
 				float g = Float.parseFloat( args[3] );
 				float b = Float.parseFloat( args[4] );
 				Color color = new Color(r, g, b);
                 this.lights.add(new PointLight(vertices.get(index), color, parent));
+            }
+			// Spot light
+            else if ( first.equals( "sl" ) ) {
+                int index = Integer.parseInt( args[1] );
+                float r = Float.parseFloat( args[2] );
+				float g = Float.parseFloat( args[3] );
+				float b = Float.parseFloat( args[4] );
+				Color color = new Color(r, g, b);
+                this.lights.add(new SpotLight(vertices.get(index), color, parent));
             }
 			// Sphere
 			else if ( first.equals( "ss" ) ) {
@@ -129,17 +138,10 @@ public class RTInterpreter {
 			else if ( first.equals( "am" ) 
 					|| first.equals( "dm" )
 					|| first.equals( "sm" )
-					|| first.equals( "al" )
-					|| first.equals( "pl" )
-					|| first.equals( "dl" )
 					|| first.equals( "back" ) ) {
-				int index = 1;
-				if (first.equals( "pl" ) || first.equals( "dl" )) {
-					index++;
-				}
-				float r = Float.parseFloat( args[index++] );
-				float g = Float.parseFloat( args[index++] );
-				float b = Float.parseFloat( args[index++] );
+				float r = Float.parseFloat( args[1] );
+				float g = Float.parseFloat( args[2] );
+				float b = Float.parseFloat( args[3] );
 				Color color = new Color(r, g, b);
 				
 				if ( first.equals( "am" ) ) {
@@ -148,7 +150,7 @@ public class RTInterpreter {
 			    	diffuseMaterial = color;
                 } if ( first.equals( "sm" )) {
                 	specularMaterial = color;
-                	specularShininess = Float.parseFloat( args[index++] );
+                	specularShininess = Float.parseFloat( args[4] );
                 }
 				
 				// Set the background color

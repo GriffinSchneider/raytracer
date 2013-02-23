@@ -41,7 +41,8 @@ public abstract class Primitive extends Node {
 			PVector lightDir = light.getDirection(intersectionPoint);
 			lightDir.normalize();
 
-			float dot = PVector.dot(surfaceNormal, lightDir);
+			float dot = PVector.dot(lightDir, surfaceNormal);
+			
 			if (dot > 0) {
 				// 1 = no shadow
 				float shadow = 1f;
@@ -54,7 +55,7 @@ public abstract class Primitive extends Node {
 						}
 					}
 				}
-				
+
 				Color lightIntensity = light.getIntensity(intersectionPoint);
 				// Diffuse
 				diffuseR += (shadow * lightIntensity.getRed() * this.diffuseMaterial.getRed() * dot) / (255.0f * 255.0f);
